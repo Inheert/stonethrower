@@ -50,6 +50,7 @@ function SWEP:StartFloating()
 
         ent.parentSWEP = self
         ent:SetOwner(self:GetOwner())
+        ent:SetModel(self:GetRockModel())
         ent:SetPos(self:GetOwner():GetPos() + Vector(math.random(-150, 150), math.random(-150, 150), 0))
         ent:Spawn()
         table.insert(self.rocks, #self.rocks + 1, ent)
@@ -90,6 +91,15 @@ function SWEP:RemoveRock(rock)
             table.remove(self.rocks, i)
         end
     end
+end
+
+function SWEP:GetRockModel()
+    if (STONETHROW.rockModelsCount < 1) then return end
+
+    local model = math.random(1, STONETHROW.rockModelsCount)
+    model = STONETHROW.rockModels[model]
+
+    return (model)
 end
 
 function SWEP:PlayThrowingSound(rock)

@@ -3,7 +3,9 @@ AddCSLuaFile("cl_init.lua")
 include("shared.lua")
 
 function ENT:Initialize()
-    self:SetModel("models/props_wasteland/rockgranite03b.mdl") -- Example model, replace with your desired model
+    if (self:GetModel() == "models/error.mdl") then
+        self:SetModel("models/props_wasteland/rockgranite03b.mdl")
+    end
     self:PhysicsInit(SOLID_VPHYSICS)
     self:SetMoveType(MOVETYPE_VPHYSICS)
     self:SetSolid(SOLID_VPHYSICS)
@@ -25,8 +27,7 @@ function ENT:Initialize()
     self.angleVelocity = Vector(math.random(STONETHROW.stoneAngleVelocity[1], STONETHROW.stoneAngleVelocity[2]),
                                 math.random(STONETHROW.stoneAngleVelocity[1], STONETHROW.stoneAngleVelocity[2]),
                                 math.random(STONETHROW.stoneAngleVelocity[1], STONETHROW.stoneAngleVelocity[2]))
-    self.zVelocity = math.random(STONETHROW.zVelocity[1], STONETHROW.zVelocity[2]) 
-    self.zVelocityDecay = math.random(STONETHROW.zVelocityDecay[1], STONETHROW.zVelocityDecay[2])
+    self.zVelocity = math.random(STONETHROW.zVelocity[1], STONETHROW.zVelocity[2])
 
     timer.Simple(STONETHROW.delayBeforeDisappearingStart, function()
         if (not IsValid(self)) then return end
@@ -87,7 +88,12 @@ function ENT:ManageRockSpawn()
     physObj:SetAngleVelocity(naturalAngleVec)
     physObj:SetVelocity(Vector(0, 0, self.zVelocity))
 
-    self.zVelocity = math.Clamp(self.zVelocity - self.zVelocityDecay, 0, self.zVelocityDecay)
+    if (self.zVelocity != 0) then
+        self.zVelocity = math.Clamp(self.zVelocity * STONETHROW.zVelocityDecay, 0, self.zVelocity)
+        if (self.zVelocity <= STONETHROW.zVelocity[1] / 10) then
+            self.zVelocity = 0
+        end
+    end
     self.isActive = true
 end
 

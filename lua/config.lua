@@ -39,10 +39,17 @@ if (SERVER) then
         "activate/activate4.wav"
     }
 
+    STONETHROW.rockModels = {
+        "models/props_wasteland/rockgranite03b.mdl",
+        "models/props_wasteland/rockgranite02c.mdl",
+        "models/props_wasteland/rockgranite03b.mdl",
+        "models/props_wasteland/rockgranite02a.mdl"
+    }
+
     // number of rocks to spawn.
     STONETHROW.rockCount = 15
     // Power applied to rock when it is thrown.
-    STONETHROW.throwingPower = 10000
+    STONETHROW.throwingPower = 2000
     // Damage applied for rock, each rock generate a random damage between this range.
     STONETHROW.rockDamage = {40, 800}
 
@@ -56,10 +63,12 @@ if (SERVER) then
     // Base velocity applied to the rock when it spawn.
     STONETHROW.zVelocity = {200, 300}
     // Base velocity decay applied to the zVelocity.
-    STONETHROW.zVelocityDecay = {100, 200}
+    // Work like this in the code: zVelocity * zVelocityDecay
+    STONETHROW.zVelocityDecay = 0.6
 
     // Don't touch this pls.
     STONETHROW.throwingSoundsCount = #STONETHROW.throwingSounds
     STONETHROW.impactSoundsCount = #STONETHROW.impactSounds
     STONETHROW.activateSoundsCount = #STONETHROW.activateSounds
+    STONETHROW.rockModelsCount = #STONETHROW.rockModels
 end
