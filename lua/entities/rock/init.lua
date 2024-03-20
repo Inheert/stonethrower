@@ -39,35 +39,22 @@ function ENT:PhysicsCollide(data, physObj)
 
     self.alreadyImpact = true
 
-    timer.Simple(0, function()
-        local explodeEffect = ents.Create("pfx1_07")
+    self:StartSoundAndEffect()
 
-        if (not IsValid(explodeEffect)) then return end
+    if (not data.HitEntity:IsPlayer() && not data.HitEntity:IsNPC()) then return end
+
+    self:DamageTarget(data.HitEntity)
+end
+
+function ENT:DamageTarget(target)
+    local dmgInfo = DamageInfo()
+
+    dmgInfo:SetAttacker(self:GetOwner())
+    dmgInfo:SetInflictor(self)
+    dmgInfo:SetDamage(math.random(STONETHROW.rockDamage[1], STONETHROW.rockDamage[2]))
+    dmgInfo:SetDamageType(DMG_GENERIC)
     
-        self:PlayImpactSound()
-
-        explodeEffect:SetMoveType(MOVETYPE_NONE)
-        explodeEffect:SetPos(self:GetPos())
-        explodeEffect:SetParent(self)
-        explodeEffect:Spawn()
-    
-        local phys = explodeEffect:GetPhysicsObject()
-
-        if (not IsValid(phys)) then return end
-        
-        phys:EnableCollisions(false)
-
-        timer.Simple(0.2, function()
-            if (not IsValid(self)) then return end
-            self:RemoveOnParentSWEP()
-            self:Remove()
-        end)
-    
-        timer.Simple(0.5, function()
-            if (not IsValid(explodeEffect)) then return end
-            explodeEffect:Remove()
-        end)
-    end)
+    target:TakeDamageInfo(dmgInfo)
 end
 
 function ENT:Think()
@@ -141,6 +128,38 @@ function ENT:RemoveOnParentSWEP()
     if (self.parentSWEP == nil || not IsValid(self)) then return end
 
     self.parentSWEP:RemoveRock(self)
+end
+
+function ENT:StartSoundAndEffect()
+    timer.Simple(0, function()
+        local explodeEffect = ents.Create("pfx1_07")
+
+        if (not IsValid(explodeEffect)) then return end
+    
+        self:PlayImpactSound()
+
+        explodeEffect:SetMoveType(MOVETYPE_NONE)
+        explodeEffect:SetPos(self:GetPos())
+        explodeEffect:SetParent(self)
+        explodeEffect:Spawn()
+    
+        local phys = explodeEffect:GetPhysicsObject()
+
+        if (not IsValid(phys)) then return end
+        
+        phys:EnableCollisions(false)
+
+        timer.Simple(0.2, function()
+            if (not IsValid(self)) then return end
+            self:RemoveOnParentSWEP()
+            self:Remove()
+        end)
+    
+        timer.Simple(0.5, function()
+            if (not IsValid(explodeEffect)) then return end
+            explodeEffect:Remove()
+        end)
+    end)
 end
 
 function ENT:PlayImpactSound()

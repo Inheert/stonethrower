@@ -44,6 +44,8 @@ if (SERVER) then
     // Power applied to rock when it is thrown.
     STONETHROW.throwingPower = 10000
 
+    STONETHROW.rockDamage = {40, 800}
+
     // Delay before the rock begins to fall and is no longer throwable.
     STONETHROW.delayBeforeDisappearingStart = 10
     // Delay before the rock totally disappear (auto remove).
