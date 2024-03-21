@@ -18,6 +18,7 @@ function ENT:Initialize()
         phys:EnableCollisions(false)
         phys:SetBuoyancyRatio(1)
         phys:EnableDrag(false)
+        phys:AddGameFlag(FVPHYSICS_NO_IMPACT_DMG)
     end
 
     self.isActive = false
@@ -38,24 +39,14 @@ end
 function ENT:PhysicsCollide(data, physObj)
     if (self.alreadyImpact == true) then return end
 
-    self.alreadyImpact = true
+    if (data.HitEntity:GetClass() == self:GetClass() && data.HitEntity:GetOwner() == self:GetOwner()) then return end
 
-    self:StartSoundAndEffect()
+    self.alreadyImpact = true
+    self:ManageImpact()
 
     if (not data.HitEntity:IsPlayer() && not data.HitEntity:IsNPC()) then return end
 
     self:DamageTarget(data.HitEntity)
-end
-
-function ENT:DamageTarget(target)
-    local dmgInfo = DamageInfo()
-
-    dmgInfo:SetAttacker(self:GetOwner())
-    dmgInfo:SetInflictor(self)
-    dmgInfo:SetDamage(math.random(STONETHROW.rockDamage[1], STONETHROW.rockDamage[2]))
-    dmgInfo:SetDamageType(DMG_GENERIC)
-    
-    target:TakeDamageInfo(dmgInfo)
 end
 
 function ENT:Think()
@@ -81,19 +72,20 @@ function ENT:ManageRockSpawn()
 
     local physObj = self:GetPhysicsObject()
     local angleVel = self.angleVelocity
-    if (not IsValid(physObj) || angleVel == nil) then return end
+
+    if (not IsValid(physObj) || angleVel == nil || (self.zVelocity == 0 && physObj:GetVelocity() == Vector(0, 0, 0))) then return end
 
     local naturalAngleVec = Vector(angleVel.x, angleVel.y, angleVel.z)
 
     physObj:SetAngleVelocity(naturalAngleVec)
     physObj:SetVelocity(Vector(0, 0, self.zVelocity))
+    self:CollisionRulesChanged()
 
-    if (self.zVelocity != 0) then
-        self.zVelocity = math.Clamp(self.zVelocity * STONETHROW.zVelocityDecay, 0, self.zVelocity)
-        if (self.zVelocity <= STONETHROW.zVelocity[1] / 10) then
-            self.zVelocity = 0
-        end
+    self.zVelocity = math.Clamp(self.zVelocity * STONETHROW.zVelocityDecay, 0, self.zVelocity)
+    if (self.zVelocity <= STONETHROW.zVelocity[1] / 10) then
+        self.zVelocity = 0
     end
+
     self.isActive = true
 end
 
@@ -120,6 +112,7 @@ function ENT:StartRemove()
     if (IsValid(phys)) then
         phys:EnableGravity(true)
         phys:EnableCollisions(true)
+        self:CollisionRulesChanged()
     end
 
     self:RemoveOnParentSWEP()
@@ -131,12 +124,12 @@ function ENT:StartRemove()
 end
 
 function ENT:RemoveOnParentSWEP()
-    if (self.parentSWEP == nil || not IsValid(self)) then return end
+    if (self.parentSWEP == nil || not IsValid(self) || not IsValid(self.parentSWEP)) then return end
 
     self.parentSWEP:RemoveRock(self)
 end
 
-function ENT:StartSoundAndEffect()
+function ENT:ManageImpact()
     timer.Simple(0, function()
         local explodeEffect = ents.Create("pfx1_07")
 
@@ -166,6 +159,17 @@ function ENT:StartSoundAndEffect()
             explodeEffect:Remove()
         end)
     end)
+end
+
+function ENT:DamageTarget(target)
+    local dmgInfo = DamageInfo()
+
+    dmgInfo:SetAttacker(self:GetOwner())
+    dmgInfo:SetInflictor(self)
+    dmgInfo:SetDamage(math.random(STONETHROW.rockDamage[1], STONETHROW.rockDamage[2]))
+    dmgInfo:SetDamageType(DMG_GENERIC)
+    
+    target:TakeDamageInfo(dmgInfo)
 end
 
 function ENT:PlayImpactSound()

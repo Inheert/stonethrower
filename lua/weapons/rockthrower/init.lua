@@ -1,4 +1,5 @@
 AddCSLuaFile("shared.lua")
+AddCSLuaFile("cl_init.lua")
 include("shared.lua")
 
 function SWEP:Initialize()
@@ -124,6 +125,6 @@ function SWEP:PlayActivateSound()
     activateSound = STONETHROW.activateSounds[activateSound]
 
     util.PrecacheSound(activateSound)
-    print(activateSound)
+
     self:GetOwner():EmitSound(activateSound)
 end

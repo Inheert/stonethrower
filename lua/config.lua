@@ -49,9 +49,9 @@ if (SERVER) then
     // number of rocks to spawn.
     STONETHROW.rockCount = 15
     // Power applied to rock when it is thrown.
-    STONETHROW.throwingPower = 2000
+    STONETHROW.throwingPower = 1000
     // Damage applied for rock, each rock generate a random damage between this range.
-    STONETHROW.rockDamage = {40, 800}
+    STONETHROW.rockDamage = {10, 30}
 
     // Delay before the rock begins to fall and is no longer throwable.
     STONETHROW.delayBeforeDisappearingStart = 10

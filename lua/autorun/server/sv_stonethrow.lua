@@ -3,12 +3,8 @@ AddCSLuaFile("autorun/sh_stonethrow.lua")
 
 include("autorun/sh_stonethrow.lua")
 
-util.AddNetworkString("EnableRock")
+hook.Add("ShouldCollide", "customCollision", function(ent1, ent2)
+    if (ent1:GetClass() == "wallcrusher" && ent2:GetClass() == "worldspawn") then return false end
 
-net.Receive("EnableRock", function(len, ply)
-
-end)
-
-hook.Add( "ShouldCollide", "Custom", function(ent1, ent2)
-    print(ent1, ent2)
+    if (ent1:GetClass() == "wallcrusher" && ent2:GetClass() == "wallcrusher") then return false end
 end)
