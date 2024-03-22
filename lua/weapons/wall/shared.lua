@@ -1,0 +1,9 @@
+SWEP.PrintName = "Wall"
+SWEP.Author = "Inheert"
+SWEP.Category = "RockThrower"
+SWEP.Spawnable = true
+SWEP.adminOnly = false
+SWEP.Primary.ClipSize = -1
+SWEP.Primary.DefaultClip = -1
+SWEP.Primary.Automatic = true
+SWEP.Primary.Ammo = "none"

@@ -71,4 +71,24 @@ if (SERVER) then
     STONETHROW.impactSoundsCount = #STONETHROW.impactSounds
     STONETHROW.activateSoundsCount = #STONETHROW.activateSounds
     STONETHROW.rockModelsCount = #STONETHROW.rockModels
+
+    // CRUSHER CONFIG
+    STONETHROW.crusher = STONETHROW.crusher or {}
+
+    STONETHROW.crusher.nextThink = 0.5
+
+    STONETHROW.crusher.damage = {10, 500}
+    STONETHROW.crusher.wallOffset = 200
+    STONETHROW.crusher.zStart = -140
+    STONETHROW.crusher.zVelocity = 500
+    STONETHROW.crusher.forceMultiplier = 3.2
+    STONETHROW.crusher.friction = STONETHROW.crusher.forceMultiplier / 1.5
+    STONETHROW.crusher.ForwardOffsets = {200, 400, 600, 800}
+
+    STONETHROW.crusher.ForwardOffsetsCount = #STONETHROW.crusher.ForwardOffsets
+
+    // COLLISIONS SETTINGS
+    STONETHROW.collisionsGroup = STONETHROW.collisionsGroup or {}
+
+    STONETHROW.collisionsGroup.NO_WORLD_COLLISION = 100
 end

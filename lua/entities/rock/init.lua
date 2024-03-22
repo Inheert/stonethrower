@@ -68,9 +68,10 @@ function ENT:EndTouch(ent)
 end
 
 function ENT:ManageRockSpawn()
-    if (not self:GetPhysicsObject():IsValid()) then return end
-
     local physObj = self:GetPhysicsObject()
+
+    if (not physObj:IsValid()) then return end
+
     local angleVel = self.angleVelocity
 
     if (not IsValid(physObj) || angleVel == nil || (self.zVelocity == 0 && physObj:GetVelocity() == Vector(0, 0, 0))) then return end
