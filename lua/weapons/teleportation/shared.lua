@@ -1,4 +1,4 @@
-SWEP.PrintName = "Wall"
+SWEP.PrintName = "Teleportation"
 SWEP.Author = "Inheert"
 SWEP.Category = "RockThrower"
 SWEP.Spawnable = true

@@ -32,9 +32,9 @@ function SWEP:StartCrusher()
     local right = ply:GetRight()
     local plyData = {pos = pos, forward = forward, right = right}
     local delay = 0
-    for i = 1, STONETHROW.crusher.ForwardOffsetsCount, 1 do
+    for i = 1, DOTON.crusher.ForwardOffsetsCount, 1 do
         timer.Simple(delay, function()
-            local wallsPos = self:GetOffset(plyData, STONETHROW.crusher.ForwardOffsets[i])
+            local wallsPos = self:GetOffset(plyData, DOTON.crusher.ForwardOffsets[i])
 
             local leftWall = self:CreateWall(wallsPos[1], 1)
             local rightWall = self:CreateWall(wallsPos[2], -1)
@@ -92,13 +92,11 @@ function SWEP:SetWallZPos(pos)
     })
 
     local distance = trace.HitPos:Distance(pos) 
-    local offsetAbs = math.abs(STONETHROW.crusher.zStart)
+    local offsetAbs = math.abs(DOTON.crusher.zStart)
 
     if (trace.HitWorld == true && distance > offsetAbs && distance < 500) then
-        print("have to spawn higher!", trace.HitPos:Distance(pos))
-        return (pos.z - STONETHROW.crusher.zStart)
+        return (pos.z - DOTON.crusher.zStart)
     end
-    print(distance)
 
     trace = util.TraceLine({
         start = pos,
@@ -107,14 +105,12 @@ function SWEP:SetWallZPos(pos)
     })
 
     local distance = trace.HitPos:Distance(pos)
-    print(distance)
 
     if (trace.HitWorld == true && distance > offsetAbs && distance < 500) then
-        print("have to spawn lower!", trace.HitPos:Distance(pos))
-        return (trace.HitPos.z + STONETHROW.crusher.zStart)
+        return (trace.HitPos.z + DOTON.crusher.zStart)
     end
 
-    return(pos.z + STONETHROW.crusher.zStart)
+    return(pos.z + DOTON.crusher.zStart)
 end
 
 function SWEP:RemoveAll()

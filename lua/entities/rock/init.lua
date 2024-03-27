@@ -25,12 +25,12 @@ function ENT:Initialize()
     self.alreadyImpact = false
     self.onRemove = false
 
-    self.angleVelocity = Vector(math.random(STONETHROW.stoneAngleVelocity[1], STONETHROW.stoneAngleVelocity[2]),
-                                math.random(STONETHROW.stoneAngleVelocity[1], STONETHROW.stoneAngleVelocity[2]),
-                                math.random(STONETHROW.stoneAngleVelocity[1], STONETHROW.stoneAngleVelocity[2]))
-    self.zVelocity = math.random(STONETHROW.zVelocity[1], STONETHROW.zVelocity[2])
+    self.angleVelocity = Vector(math.random(DOTON.rockThrower.stoneAngleVelocity[1], DOTON.rockThrower.stoneAngleVelocity[2]),
+                                math.random(DOTON.rockThrower.stoneAngleVelocity[1], DOTON.rockThrower.stoneAngleVelocity[2]),
+                                math.random(DOTON.rockThrower.stoneAngleVelocity[1], DOTON.rockThrower.stoneAngleVelocity[2]))
+    self.zVelocity = math.random(DOTON.rockThrower.zVelocity[1], DOTON.rockThrower.zVelocity[2])
 
-    timer.Simple(STONETHROW.delayBeforeDisappearingStart, function()
+    timer.Simple(DOTON.rockThrower.delayBeforeDisappearingStart, function()
         if (not IsValid(self)) then return end
         self:StartRemove()
     end)
@@ -82,8 +82,8 @@ function ENT:ManageRockSpawn()
     physObj:SetVelocity(Vector(0, 0, self.zVelocity))
     self:CollisionRulesChanged()
 
-    self.zVelocity = math.Clamp(self.zVelocity * STONETHROW.zVelocityDecay, 0, self.zVelocity)
-    if (self.zVelocity <= STONETHROW.zVelocity[1] / 10) then
+    self.zVelocity = math.Clamp(self.zVelocity * DOTON.rockThrower.zVelocityDecay, 0, self.zVelocity)
+    if (self.zVelocity <= DOTON.rockThrower.zVelocity[1] / 10) then
         self.zVelocity = 0
     end
 
@@ -118,7 +118,7 @@ function ENT:StartRemove()
 
     self:RemoveOnParentSWEP()
 
-    timer.Simple(STONETHROW.delayBeforeDisappearing, function()
+    timer.Simple(DOTON.rockThrower.delayBeforeDisappearing, function()
         if (not IsValid(self)) then return end
         self:Remove()
     end)
@@ -167,7 +167,7 @@ function ENT:DamageTarget(target)
 
     dmgInfo:SetAttacker(self:GetOwner())
     dmgInfo:SetInflictor(self)
-    dmgInfo:SetDamage(math.random(STONETHROW.rockDamage[1], STONETHROW.rockDamage[2]))
+    dmgInfo:SetDamage(math.random(DOTON.rockThrower.rockDamage[1], DOTON.rockThrower.rockDamage[2]))
     dmgInfo:SetDamageType(DMG_GENERIC)
     
     target:TakeDamageInfo(dmgInfo)
@@ -176,10 +176,10 @@ end
 function ENT:PlayImpactSound()
     if (not IsValid(self)) then return end
 
-    if (STONETHROW.impactSoundsCount < 1) then return end
+    if (DOTON.rockThrower.impactSoundsCount < 1) then return end
 
-    local impactSound = math.random(1, STONETHROW.impactSoundsCount)
-    impactSound = STONETHROW.impactSounds[impactSound]
+    local impactSound = math.random(1, DOTON.rockThrower.impactSoundsCount)
+    impactSound = DOTON.rockThrower.impactSounds[impactSound]
 
     util.PrecacheSound(impactSound)
 

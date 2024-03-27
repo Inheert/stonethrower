@@ -1,19 +1,14 @@
 include("autorun/sh_stonethrow.lua")
 
-hook.Add( "PlayerBindPress", "PlayerBindPressExample", function( ply, bind, pressed )
+hook.Add("PlayerBindPress", "PlayerBindPressExample", function( ply, bind, pressed )
     if (bind == "slot1") then
         return (0)
     end
 end )
 
-hook.Add("Think", "test", function()
-    local ply = LocalPlayer()
-    local pos = ply:GetPos()
+net.Receive("particleDisplay", function()
+    local data = net.ReadTable()
 
-    trace = util.TraceLine({
-        start = pos,
-        endpos = pos + Vector(0, 0, 1000),
-        filter = ply
-    })
-    PrintTable(trace)
+    if (data.pos == nil || data.name == nil || data.angle == nil) then return end
+    ParticleEffect(data.name, data.pos, data.angle)
 end)

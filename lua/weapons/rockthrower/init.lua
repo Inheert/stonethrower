@@ -43,8 +43,9 @@ end
 
 function SWEP:StartFloating()
     self:PlayActivateSound()
+    self:PrepareParticles(self:GetOwner():GetPos(), DOTON.particles.stoneThrowerInit)
 
-    for i = 1, STONETHROW.rockCount, 1 do
+    for i = 1, DOTON.rockThrower.rockCount, 1 do
         local ent = ents.Create("rock")
 
         if (not IsValid(ent)) then return end
@@ -56,6 +57,18 @@ function SWEP:StartFloating()
         ent:Spawn()
         table.insert(self.rocks, #self.rocks + 1, ent)
     end
+end
+
+function SWEP:PrepareParticles(pos, particleInfo)
+    local data = {
+        pos = pos,
+        name = particleInfo.name,
+        angle = particleInfo.angle
+    }
+
+    net.Start("particleDisplay")
+    net.WriteTable(data)
+    net.Send(self:GetOwner())
 end
 
 function SWEP:ThrowRock(rock)
@@ -74,7 +87,7 @@ function SWEP:ThrowRock(rock)
     local direction = (trace.HitPos - pos):GetNormalized()
     local distance = trace.HitPos:Distance(pos)
     local ang = owner:EyeAngles()
-    local forceVec = direction * STONETHROW.throwingPower
+    local forceVec = direction * DOTON.rockThrower.throwingPower
 
     local physObj = rock:GetPhysicsObject()
 
@@ -95,10 +108,10 @@ function SWEP:RemoveRock(rock)
 end
 
 function SWEP:GetRockModel()
-    if (STONETHROW.rockModelsCount < 1) then return end
+    if (DOTON.rockThrower.rockModelsCount < 1) then return end
 
-    local model = math.random(1, STONETHROW.rockModelsCount)
-    model = STONETHROW.rockModels[model]
+    local model = math.random(1, DOTON.rockThrower.rockModelsCount)
+    model = DOTON.rockThrower.rockModels[model]
 
     return (model)
 end
@@ -106,10 +119,10 @@ end
 function SWEP:PlayThrowingSound(rock)
     if (not IsValid(rock)) then return end
     
-    if (STONETHROW.throwingSoundsCount < 1) then return end
+    if (DOTON.rockThrower.throwingSoundsCount < 1) then return end
 
-    local throwingSound = math.random(1, STONETHROW.throwingSoundsCount)
-    throwingSound = STONETHROW.throwingSounds[throwingSound]
+    local throwingSound = math.random(1, DOTON.rockThrower.throwingSoundsCount)
+    throwingSound = DOTON.rockThrower.throwingSounds[throwingSound]
 
     util.PrecacheSound(throwingSound)
 
@@ -119,10 +132,10 @@ end
 function SWEP:PlayActivateSound()
     if (not IsValid(self)) then return end
     
-    if (STONETHROW.activateSoundsCount < 1) then return end
+    if (DOTON.rockThrower.activateSoundsCount < 1) then return end
 
-    local activateSound = math.random(1, STONETHROW.activateSoundsCount)
-    activateSound = STONETHROW.activateSounds[activateSound]
+    local activateSound = math.random(1, DOTON.rockThrower.activateSoundsCount)
+    activateSound = DOTON.rockThrower.activateSounds[activateSound]
 
     util.PrecacheSound(activateSound)
 

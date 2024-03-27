@@ -25,13 +25,12 @@ function ENT:Initialize()
         self:Remove() 
     end)
 
-    self.zVelocity = STONETHROW.crusher.zVelocity
+    self.zVelocity = DOTON.crusher.zVelocity
 
     self.initializeTime = CurTime()
     self.isForceAlreadyApplied = false
     self.isPhysicsCollideManaged = false
     self.isCrushing = false
-    self.forceMultiplier = 3
 end
 
 function ENT:StartTouch(ent)
@@ -86,7 +85,7 @@ function ENT:Think()
         self:Crushing()
     end
 
-    self:NextThink(CurTime() + STONETHROW.crusher.nextThink)
+    self:NextThink(CurTime() + DOTON.crusher.nextThink)
     return (true)
 end
 
@@ -112,12 +111,12 @@ function ENT:ManageWallSpawn()
     end)
 
     if (self.isForceAlreadyApplied == false) then
-        physObj:ApplyForceCenter(Vector(0, 0, self.zVelocity * STONETHROW.crusher.forceMultiplier))
+        physObj:ApplyForceCenter(Vector(0, 0, self.zVelocity * DOTON.crusher.forceMultiplier))
         
         timer.Simple(0.1, function()
             if (not IsValid(self)) then return end
     
-            physObj:ApplyForceCenter(Vector(0, 0, -self.zVelocity * STONETHROW.crusher.friction))
+            physObj:ApplyForceCenter(Vector(0, 0, -self.zVelocity * DOTON.crusher.friction))
             self.zVelocity = 0
         end)
     end
@@ -145,7 +144,7 @@ function ENT:DamageTarget(target)
 
     dmgInfo:SetAttacker(self:GetOwner())
     dmgInfo:SetInflictor(self)
-    dmgInfo:SetDamage(math.random(STONETHROW.crusher.damage[1], STONETHROW.crusher.damage[2]))
+    dmgInfo:SetDamage(math.random(DOTON.crusher.damage[1], DOTON.crusher.damage[2]))
     dmgInfo:SetDamageType(DMG_GENERIC)
     
     target:TakeDamageInfo(dmgInfo)
